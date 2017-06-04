@@ -28,7 +28,7 @@ void stride_file(FILE *fp,char* ofile_st_name, int n_S,float *S_imax,
 		float *S_imin, double *t,float *axis);
 void training_file(FILE *fp,char* train_file_name, int n_S,float *S_imax,
 		float **features,int activityCode,double *t,int nfeatures,int
-		nOutputs);
+		nOutputs, float *meanFeatures);
 void featureExtraction(int n_S,float *S_imax,float **features,float *axis);
 void training_file2(FILE *fp,char* train_file_name, int n_S,float *S_imax,
 		int activityCode,double *t,int nfeatures,int subSeg,
@@ -522,12 +522,19 @@ int main(int argc, char **argv)
 
 
 
-	float *features[]={mean_yac3,variance_xac1};
-
 	nfeatures = 2;
 	nOutputs = 2;
-	training_file(fp,train_file_name,n_S,S_imax,features,activityCode,t,
-			nfeatures,nOutputs);
+
+	float *features[]={mean_yac3,mean_xac3};
+	float meanFeatures[nfeatures];
+	for(k=0;k<nfeatures;k++)
+	{
+		meanFeatures[k] = calculate_mean(features[k],0,n_S);
+	}
+	
+
+	training_file(train_file_name,n_S,S_imax,features,activityCode,t,
+			nfeatures,nOutputs,meanFeatures);
 
 
 
@@ -570,7 +577,7 @@ void featureExtraction(int n_S,float *S_imax,float **features,float *axis)
 }
 
 void training_file(FILE *fp,char* train_file_name, int n_S,float *S_imax,
-	float **Features,int activityCode,double *t,int nfeatures,int nOutputs)
+	float **Features,int activityCode,double *t,int nfeatures,int nOutputs, float *meanFeatures)
 {
 	double period;
 	int i,j,k,idx_max,idx_next;
@@ -598,23 +605,34 @@ void training_file(FILE *fp,char* train_file_name, int n_S,float *S_imax,
 	idx_next = 0;
 //	fprintf(fp,"start\n");
 //	
-
+	float meanThreshold = 0.9;
+	int en = 0;
+	
 	for (i = 0; i < (n_S); i++) {
 		//idx_max = (int) S_imax[i];
 		//idx_next = (int) S_imax[i+1];
 		//((i+1)!=n_S)? period = t[idx_next]- t[idx_max]: period;
 		//fprintf(fp, "%lf",period/10.0);
-		
 		for(j=0;j<nfeatures;j++)
 		{
-			fprintf(fp,"%f ",Features[j][i]/100);
-		}	
-		fprintf(fp, "\n");
-		for(k=0;k<nOutputs;k++)
-		{
-			fprintf(fp,"%d ",arrCode[k]);
+			if(Features[j][i]>meanFeatures[j]+meanThreshold){ 
+				en = 1;}
+			else if(Features[j][i]<meanFeatures[j]-meanThreshold){
+				en = 1;}
 		}
-		fprintf(fp, "\n");
+		if(en==1){en = 0; }
+		else{
+			for(j=0;j<nfeatures;j++)
+			{
+				fprintf(fp,"%f ",Features[j][i]/100);
+			}	
+			fprintf(fp, "\n");
+			for(k=0;k<nOutputs;k++)
+			{
+				fprintf(fp,"%d ",arrCode[k]);
+			}
+			fprintf(fp, "\n");
+		}
 	}
 	fclose(fp);
 }
@@ -690,7 +708,7 @@ float calculate_mean(float *arr, int start, int end)
 		total += arr[start + i];
 	}
 
-	return total/((float) n);
+	return total/(n);
 }
 
 void calculate_Max_Min_Range(float *arr,int start,int end,
@@ -734,12 +752,12 @@ void calculate_Statistics (float *arr, int start, int end, float mean,
 		total4 += holder*holder*holder*holder;	
 	}
 
-	*MAD = total1/((float) n);
-	*variance = total2/((float) n);
+	*MAD = total1/(n);
+	*variance = total2/(n);
 	*std = sqrt(*variance);
 	holder = *std;
-	*skewness = (total3/((float) n))/(holder*holder*holder);
-	*kurtosis = (total4/((float) n))/(holder*holder*holder*holder);
+	*skewness = (total3/(n))/(holder*holder*holder);
+	*kurtosis = (total4/(n))/(holder*holder*holder*holder);
 }
 
 
