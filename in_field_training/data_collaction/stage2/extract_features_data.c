@@ -61,7 +61,7 @@ int main()
 	float *S_imax,*S_imin; 	// indicies of the start of each stride
 	int n_P; 	// number of peaks
 	int n_T; 	// number of troughs
-	int n_S = 0; 	// number of strides
+	int n_S = 1000; 	// number of strides
 
 //	char number[10];
 	int icntr = 0;
@@ -555,7 +555,7 @@ float calculate_mean(float *arr, int start, int end)
 		total += arr[start + i];
 	}
 
-	return total/((float) n);
+	return total/(n);
 }
 
 void calculate_Max_Min_Range(float *arr,int start,int end,
@@ -600,12 +600,12 @@ void calculate_Statistics (float *arr, int start, int end, float mean,
 		total4 += holder*holder*holder*holder;	
 	}
 
-	*MAD = total1/((float) n);
-	*variance = total2/((float) n);
+	*MAD = total1/(n);
+	*variance = total2/(n);
 	*std = sqrt(*variance);
 	holder = *std;
-	*skewness = (total3/((float) n))/(holder*holder*holder);
-	*kurtosis = (total4/((float) n))/(holder*holder*holder*holder);
+	*skewness = (total3/(n))/(holder*holder*holder);
+	*kurtosis = (total4/(n))/(holder*holder*holder*holder);
 }
 
 
