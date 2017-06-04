@@ -13,7 +13,7 @@
  */
 void clear_buffer(float *arr, float val, int n); 
 float calculate_mean(float *arr, int start, int end);
-int calculate_Max_Min_Range(float *arr,int start,int end,
+void calculate_Max_Min_Range(float *arr,int start,int end,
 		float *max, float *min, float *range);
 void calculate_Statistics (float *arr, int start, int end, float mean, 
 		float *MAD, float *variance, float *std,
@@ -28,7 +28,7 @@ void stride_file(FILE *fp,char* ofile_st_name, int n_S,float *S_imax,
 		float *S_imin, double *t,float *axis);
 void training_file(FILE *fp,char* train_file_name, int n_S,float *S_imax,
 		float **features,int activityCode,double *t,int nfeatures,int
-		nOutputs);
+		nOutputs, float *meanFeatures);
 void featureExtraction(int n_S,float *S_imax,float **features,float *axis);
 void training_file2(FILE *fp,char* train_file_name, int n_S,float *S_imax,
 		int activityCode,double *t,int nfeatures,int subSeg,
@@ -210,8 +210,8 @@ int main(int argc, char **argv)
 	stride_file(fp,ofile_st_name,n_S,S_imax,S_imin,t,z_gy);
 
 	/*extracting features*/
-	char * train_file_name = "rs_temp.txt";
-	char * analysis_file_name = "rs_analysis.csv";
+	char * train_file_name = "r_temp.txt";
+	char * analysis_file_name = "r_analysis.csv";
 	int start,end;
 	int j,k;
 	float offset=0;
@@ -219,14 +219,11 @@ int main(int argc, char **argv)
 	int nfeatures;
 	int nOutputs;
 
- 	/*x_ac*/
-	float max_xac[n_S],min_xac[n_S],mean_xac3[n_S],min_xac4[n_S],
-	      range_xac4[n_S],variance_xac4[n_S];
-	int subIndx = 0;
-	int subSeg =4;
-	int nft = 9;
-	float xftrs[n_S][nft][subSeg];
-	//printf("n_S: %d\n",n_S);
+ 
+	/*x_ac*/
+	float mean_xac[n_S],max_xac[n_S],min_xac[n_S],variance_xac[n_S];
+
+	
 	for(k=0;k<n_S;k++)
 	{
 		//if((k+1)!=n_S){	offset =(S_imax[k+1]-S_imax[k])/2;}
@@ -235,14 +232,21 @@ int main(int argc, char **argv)
 
 		start = abs((int) S_imax[k]-offset); //shift from the pick to the valley
 		end = (int)S_imax[k]+offset;
-	//	mean_xac[k] = calculate_mean(x_ac,start,end);
+//		mean_yac[k] = calculate_mean(y_ac,start,end);
         	calculate_Max_Min_Range(x_ac,start,end,(max_xac+k),(min_xac+k),
 				(holder+k));
-        //	calculate_Statistics (x_ac,start,end,mean_xac[k],(holder+k),
-	//          (variance_xac+k),(holder+k),(skewness_xac+k),(holder+k));
+   //      	calculate_Statistics (y_ac,start,end,mean_yac[k],(holder+k),
+//	          (variance_yac+k),(holder+k),(skewness_yac+k),(holder+k));
 		
+//		ratio_yac[k] = max_yac[k]/min_yac[k];
 	}
-	
+
+	float mean_xac3[n_S],min_xac4[n_S],range_xac4[n_S],variance_xac1[n_S];
+	int subIndx = 0;
+	int subSeg =4;
+	int nft = 9;
+	float xftrs[n_S][nft][subSeg];
+	//printf("n_S: %d\n",n_S);
 	for(k=0;k<n_S;k++)
 	{
 		//if((k+1)!=n_S){	offset = (S_imax[k+1]-S_imax[k])/2;}
@@ -272,7 +276,7 @@ int main(int argc, char **argv)
 		mean_xac3[k]= xftrs[k][0][2];         //mean subseg 3 
 		min_xac4[k] = xftrs[k][2][3];         //min  subseg 4
 		range_xac4[k]= xftrs[k][3][3];        //range subseg 4 
-		variance_xac4[k]=xftrs[k][5][3];      //var   subseg 4
+		variance_xac1[k]=xftrs[k][5][0];      //var   subseg 1
 
 		//printf("k: %d\n",k);
 
@@ -396,7 +400,7 @@ int main(int argc, char **argv)
 
 
 	/*x_gy*/
-	float max_xgy[n_S],min_xgy[n_S],mean_xgy[n_S],kurtosis_xgy[n_S];
+	float mean_xgy[n_S],kurtosis_xgy[n_S],max_xgy[n_S];
 	for(k=0;k<n_S;k++)
 	{
 		//if((k+1)!=n_S){offset = (S_imax[k+1]-S_imax[k])/2;}
@@ -405,7 +409,7 @@ int main(int argc, char **argv)
 		start = abs((int)S_imax[k]-offset); //shift from the pick to the valley
 		end = (int)S_imax[k]+offset;
 		mean_xgy[k] = calculate_mean(x_gy,start,end);
- 	      calculate_Max_Min_Range(x_gy,start,end,(max_xgy+k),(min_xgy+k),
+ 	      calculate_Max_Min_Range(x_gy,start,end,(max_xgy+k),(holder+k),
 				(holder+k));
        		calculate_Statistics (x_gy,start,end,mean_xgy[k],(holder+k),
 	         (holder+k),(holder+k),(holder+k),(kurtosis_xgy+k));
@@ -486,8 +490,7 @@ int main(int argc, char **argv)
 
 	/*z_gy*/
 	float mean_zgy[n_S],max_zgy[n_S],min_zgy[n_S],MAD_zgy[n_S],
-	      skewness_zgy[n_S],kurtosis_zgy[n_S]; 
-	float   period[n_S];
+	      skewness_zgy[n_S],kurtosis_zgy[n_S];
 	
 	for(k=0;k<n_S;k++)
 	{
@@ -497,8 +500,8 @@ int main(int argc, char **argv)
 		start = abs((int)S_imax[k]-offset); //shift from the pick to the valley
 		end = (int)S_imax[k]+offset;
 		mean_zgy[k] = calculate_mean(z_gy,start,end);
- 	      	period[k] = (float)calculate_Max_Min_Range(z_ac,start,end,
-				(max_zgy+k),(min_zgy+k),(holder+k));
+ 	      	calculate_Max_Min_Range(z_ac,start,end,(max_zgy+k),(min_zgy+k),
+				(holder+k));
        		calculate_Statistics (z_gy,start,end,mean_zgy[k],(MAD_zgy+k),
 	         (holder+k),(holder+k),(skewness_zgy+k),(kurtosis_zgy+k));
 	}
@@ -540,13 +543,19 @@ int main(int argc, char **argv)
 
 
 
-	float *features[]={min_xac,max_xgy};
-
-
 	nfeatures = 2;
 	nOutputs = 2;
+
+	float *features[]={min_xac,max_xgy};
+	float meanFeatures[nfeatures];
+	for(k=0;k<nfeatures;k++)
+	{
+		meanFeatures[k] = calculate_mean(features[k],0,n_S);
+	}
+	
+
 	training_file(fp,train_file_name,n_S,S_imax,features,activityCode,t,
-			nfeatures,nOutputs);
+			nfeatures,nOutputs,meanFeatures);
 
 
 
@@ -589,7 +598,7 @@ void featureExtraction(int n_S,float *S_imax,float **features,float *axis)
 }
 
 void training_file(FILE *fp,char* train_file_name, int n_S,float *S_imax,
-	float **Features,int activityCode,double *t,int nfeatures,int nOutputs)
+	float **Features,int activityCode,double *t,int nfeatures,int nOutputs, float *meanFeatures)
 {
 	double period;
 	int i,j,k,idx_max,idx_next;
@@ -617,23 +626,34 @@ void training_file(FILE *fp,char* train_file_name, int n_S,float *S_imax,
 	idx_next = 0;
 //	fprintf(fp,"start\n");
 //	
-
+	float meanThreshold = 0.9;
+	int en = 0;
+	
 	for (i = 0; i < (n_S); i++) {
 		//idx_max = (int) S_imax[i];
 		//idx_next = (int) S_imax[i+1];
 		//((i+1)!=n_S)? period = t[idx_next]- t[idx_max]: period;
 		//fprintf(fp, "%lf",period/10.0);
-		
 		for(j=0;j<nfeatures;j++)
 		{
-			fprintf(fp,"%f ",Features[j][i]/1000);
-		}	
-		fprintf(fp, "\n");
-		for(k=0;k<nOutputs;k++)
-		{
-			fprintf(fp,"%d ",arrCode[k]);
+			if(Features[j][i]>meanFeatures[j]+meanThreshold){ 
+				en = 1;}
+			else if(Features[j][i]<meanFeatures[j]-meanThreshold){
+				en = 1;}
 		}
-		fprintf(fp, "\n");
+		if(en==1){en = 0; }
+		else{
+			for(j=0;j<nfeatures;j++)
+			{
+				fprintf(fp,"%f ",Features[j][i]/100);
+			}	
+			fprintf(fp, "\n");
+			for(k=0;k<nOutputs;k++)
+			{
+				fprintf(fp,"%d ",arrCode[k]);
+			}
+			fprintf(fp, "\n");
+		}
 	}
 	fclose(fp);
 }
@@ -709,36 +729,31 @@ float calculate_mean(float *arr, int start, int end)
 		total += arr[start + i];
 	}
 
-	return total/((float) n);
+	return total/(n);
 }
 
-int calculate_Max_Min_Range(float *arr,int start,int end,
+void calculate_Max_Min_Range(float *arr,int start,int end,
 		float *max, float *min, float *range)
 {
 	float total;
-	int i, n,maxIndx,minIndx;
+	int i, n;
 
 	n = end - start;
 	total = 0.0f;
 	*max = arr[start];
 	*min = arr[start];
-	maxIndx = start;
-	minIndx = start;
 	
 	for (i = 0; i < n; i++) {
 		if(arr[start+i]> *max)
 		{
 			*max = arr[start+i];
-			maxIndx = start+i;
 		}
 		if(arr[start+i]< *min)
 		{
 			*min = arr[start+i];
-			minIndx = start+i;
 		}
 	}
 	*range = (*max-*min);
-	return ( abs(minIndx - maxIndx));
 }
 
 void calculate_Statistics (float *arr, int start, int end, float mean, 
@@ -758,12 +773,12 @@ void calculate_Statistics (float *arr, int start, int end, float mean,
 		total4 += holder*holder*holder*holder;	
 	}
 
-	*MAD = total1/((float) n);
-	*variance = total2/((float) n);
+	*MAD = total1/(n);
+	*variance = total2/(n);
 	*std = sqrt(*variance);
 	holder = *std;
-	*skewness = (total3/((float) n))/(holder*holder*holder);
-	*kurtosis = (total4/((float) n))/(holder*holder*holder*holder);
+	*skewness = (total3/(n))/(holder*holder*holder);
+	*kurtosis = (total4/(n))/(holder*holder*holder*holder);
 }
 
 

@@ -533,7 +533,7 @@ int main(int argc, char **argv)
 	}
 	
 
-	training_file(train_file_name,n_S,S_imax,features,activityCode,t,
+	training_file(fp,train_file_name,n_S,S_imax,features,activityCode,t,
 			nfeatures,nOutputs,meanFeatures);
 
 
