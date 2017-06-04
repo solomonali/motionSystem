@@ -1,0 +1,34 @@
+
+
+	// train data store to test_data.txt
+	FILE *fp;
+	fp = fopen("./test_data.txt", "wb");
+	fprintf(fp, "250\t3\t5\n");
+
+	// generate the test_data.txt output
+	for (location = 0; location < 5; location++) {
+		if (location != 4) {
+			printf("Please position the Test Object to cast a shadow on region (%d).\n", location);
+			printf("While you are casting this shadow and while the shadow is stable, please press the return key to capture data.\n");
+		} else {
+			printf("Please do not cast any shadow on the sensors and press the return key\n");
+		}
+
+		do {
+			success_flag = getchar();
+		} while (success_flag != '\n');
+		
+		for (i = 0; i < 5; i++) {
+			output[i] = -1;
+		}
+		output[location] = 1;
+
+		// collect 50 data per area
+		
+			
+		//write input, output to test_data.txt as training file format
+		
+		
+	}
+	// close everything
+	fclose(fp);

@@ -1,0 +1,33 @@
+ 	/*x_ac*/
+	float mean_xac3[n_S],min_xac4[n_S],range_xac4[n_S],variance_xac4[n_S];
+	int subIndx = 0;
+	int subSeg =4;
+	int nft = 9;
+	float xftrs[n_S][nft][subSeg];
+	for(k=0;k<n_S;k++)
+	{
+		if( S_imax[k]>250){ offset = 250;}
+		else {continue;} 
+		start = abs((int)(S_imax[k]-offset)); //shift from the pick to the valley
+		end = (int)S_imax[k]+offset;
+		subIndx = (end-start)/subSeg;
+		for(j=0;j<subSeg;j++)
+		{
+			end = start + subIndx;
+		    	xftrs[k][0][j] = calculate_mean(x_ac,start,end);
+        	    	calculate_Max_Min_Range(x_ac,start,end,&xftrs[k][1][j],
+				    &xftrs[k][2][j],&xftrs[k][3][j]);
+        	    	calculate_Statistics(x_ac,start,end,xftrs[k][0][j],
+				&xftrs[k][4][j],&xftrs[k][5][j],&xftrs[k][6][j],
+				&xftrs[k][7][j],&xftrs[k][8][j]);
+			start = end;
+		    
+		}
+		mean_xac3[k]= xftrs[k][0][2];         //mean subseg 3 
+		min_xac4[k] = xftrs[k][2][3];         //min  subseg 4
+		range_xac4[k]= xftrs[k][3][3];        //range subseg 4 
+		variance_xac4[k]=xftrs[k][5][3];      //var   subseg 4
+
+	}
+
+
