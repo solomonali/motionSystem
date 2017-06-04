@@ -83,7 +83,7 @@ int main(int argc, char **argv)
 		ofile_st_name = (char *) malloc(sizeof(char) * BUFF_SIZE);
 		memset(ofile_st_name, 0, BUFF_SIZE);
 		snprintf(ofile_st_name, BUFF_SIZE, "strides.csv");
-		pk_threshold = 100.0;
+		pk_threshold = 80.0;
 	} else {
 		ifile_name = argv[1];
 		ofile_pt_name = argv[2];
@@ -691,7 +691,7 @@ float calculate_mean(float *arr, int start, int end)
 		total += arr[start + i];
 	}
 
-	return total/((float) n);
+	return total/(n);
 }
 
 void calculate_Max_Min_Range(float *arr,int start,int end,
@@ -735,12 +735,12 @@ void calculate_Statistics (float *arr, int start, int end, float mean,
 		total4 += holder*holder*holder*holder;	
 	}
 
-	*MAD = total1/((float) n);
-	*variance = total2/((float) n);
+	*MAD = total1/(n);
+	*variance = total2/(n);
 	*std = sqrt(*variance);
 	holder = *std;
-	*skewness = (total3/((float) n))/(holder*holder*holder);
-	*kurtosis = (total4/((float) n))/(holder*holder*holder*holder);
+	*skewness = (total3/(n))/(holder*holder*holder);
+	*kurtosis = (total4/(n))/(holder*holder*holder*holder);
 }
 
 
