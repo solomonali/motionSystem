@@ -101,7 +101,7 @@ int main()
 	    t_nfeatures,t_nOutputs,t_result,
 	    sa_nfeatures,sa_nOutputs,sa_result,
 	    sas_nfeatures,sas_nOutputs,sas_result,
-	    sd_nfeatures,sd_nOutputs,sd_result;
+	    sd_nfeatures,sd_nOutputs,sd_result,
 	    sds_nfeatures,sds_nOutputs,sds_result;
 	w_nfeatures=2;w_nOutputs=2;w_result=0;
 	ws_nfeatures=2,ws_nOutputs=2,ws_result=0,
@@ -112,7 +112,7 @@ int main()
         t_nfeatures=1;t_nOutputs=3;t_result=0;
         sa_nfeatures=4;sa_nOutputs=2;sa_result=0;
         sas_nfeatures=2,sas_nOutputs=2,sas_result=0,
-        sd_nfeatures=4;sd_nOutputs=2;sd_result=0;
+        sd_nfeatures=4;sd_nOutputs=2;sd_result=0,
         sds_nfeatures=2,sds_nOutputs=2,sds_result=0;
 
 
@@ -125,7 +125,7 @@ int main()
 		    *t_ann,
 		    *sa_ann,
 		    *sas_ann,
-		    *sd_ann;
+		    *sd_ann,
 		    *sds_ann;
     	w_ann = fann_create_from_file("w_TEST.net");
 	ws_ann = fann_create_from_file("./ws_TEST.net");
