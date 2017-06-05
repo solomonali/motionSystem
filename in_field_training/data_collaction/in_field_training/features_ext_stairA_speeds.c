@@ -521,8 +521,8 @@ int main(int argc, char **argv)
 
 
 
-
-	float *features[]={mean_yac3,variance_xac1};
+	
+	float *features[]={range_yac,variance_yac};
 
 	nfeatures = 2;
 	nOutputs = 3;
