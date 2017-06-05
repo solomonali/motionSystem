@@ -517,7 +517,7 @@ int main()
         	    	    }
 			}
 			
-			switch(w_result){
+/*			switch(w_result){
 				case 0:
 					printf("walking\n");
 					break;
@@ -581,6 +581,73 @@ int main()
 				default:
 					printf("error motion\n");
 			}
+*/			
+			if(t_result==0){
+				printf("left turn\n");
+			}
+			else if(t_result==1){
+				printf("right turn\n");
+			}
+			else if(r_result==0){
+				switch(rs_result){
+				case 0:
+					printf("running: speed 1\n");
+					break;
+				case 1:
+					printf("running: speed 2\n");
+					break;
+				}
+			}
+			else if(j_result==0){
+				switch(jl_result){
+					case 0:
+						printf("jumping: level 1\n");
+						break;
+					case 1:
+						printf("jumping: level 2\n");
+						break;
+				}
+			}
+			else if(sa_result==0){
+				switch(sas_result){
+					case 0:
+						printf("stair ascent: speed 1\n");
+						break;
+					case 1:
+						printf("stair ascent: speed 2\n");
+						break;
+					case 2:
+						printf("stair ascent: speed 3\n");
+						break;
+				}
+			}
+			else if(sd_result==0){
+				switch(sds_result){
+					case 0:
+						printf("stair descent: speed 1\n");
+						break;
+					case 1:
+						printf("stair descent: speed 2\n");
+						break;
+					case 2:
+						printf("stair descent: speed 3\n");
+						break;
+				}
+			}
+			else if(w_result==0){
+				switch(ws_result){
+					case 0:
+						printf("walking: speed 1\n");
+						break;
+					case 1:
+						printf("walking: speed 2\n");
+						break;
+					case 2:
+						printf("walking: speed 3\n");
+						break;
+				}
+			}
+			
 			printf("\n");	
 
 		}
