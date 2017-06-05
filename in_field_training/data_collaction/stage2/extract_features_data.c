@@ -81,7 +81,7 @@ int main()
 
 	/* feature extraction variables */ 
 	float mean_zgy[n_S],kurtosis_zgy[n_S],holder[n_S],skewness_zgy[n_S],max_zgy[n_S],
-	      mean_xac[n_S],variance_xac[n_S],mean_xac3[n_S],min_xac4[n_S],
+	      mean_xac[n_S],min_xac[n_S],variance_xac[n_S],mean_xac3[n_S],min_xac4[n_S],
 	      mean_xgy[n_S],max_xgy[n_S],
 	      ratio_yac[n_S],max_yac[n_S],min_yac[n_S],mean_yac[n_S],
 	      skewness_yac[n_S],variance_yac[n_S],range_yac[n_S],mean_yac3[n_S];
@@ -142,7 +142,7 @@ int main()
 	float *w_features[]={mean_yac,variance_xac};
 	float *ws_features[]={mean_xac,max_xgy};
 	float *r_features[]={mean_yac3,mean_xac3};
-	float *rs_features[]={mean_xac,max_xgy};
+	float *rs_features[]={min_xac,max_xgy};
 	float *j_features[]={mean_xac3,min_xac4};
 	float *jl_features[]={max_zgy,max_xgy};
 	float *t_features[]={mean_xgy};
@@ -250,6 +250,9 @@ int main()
 			start =abs((int)S_imax[k]-offset); //shift to the valley
 			end = (int)S_imax[k]+offset;
 			mean_xac[k] = calculate_mean(x_ac,start,end);
+			calculate_Max_Min_Range(x_ac,start,end,
+					(holder+k),(min_xac+k),
+					(holder+k));
 			calculate_Statistics (x_ac,start,end,mean_xac[k],
 				(holder+k),(variance_xac+k),(holder+k),
 				(holder+k),(holder+k));
