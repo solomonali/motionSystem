@@ -149,7 +149,7 @@ int main()
 	float *sa_features[]={ratio_yac,max_yac,skewness_yac,skewness_zgy};
 	float *sas_features[]={range_yac,variance_yac};
 	float *sd_features[]={mean_zgy,skewness_yac,mean_yac,variance_yac};
-	float *sdsfeatures[]={range_yac,variance_yac};
+	float *sds_features[]={range_yac,variance_yac};
 	
 	////begin of reading the files/////	
 	while(1)
