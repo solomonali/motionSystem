@@ -210,8 +210,8 @@ int main(int argc, char **argv)
 	stride_file(fp,ofile_st_name,n_S,S_imax,S_imin,t,z_gy);
 
 	/*extracting features*/
-	char * train_file_name = "r_temp.txt";
-	char * analysis_file_name = "r_analysis.csv";
+	char * train_file_name = "rs_temp.txt";
+	char * analysis_file_name = "rs_analysis.csv";
 	int start,end;
 	int j,k;
 	float offset=0;

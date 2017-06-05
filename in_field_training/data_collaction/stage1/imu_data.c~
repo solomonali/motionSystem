@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
 	{
 		signal(SIGINT, &do_when_interrupted);
 		if(!run_flag){break;}
-		if(cntr==9){cntr=0;}
+		if(cntr==10){cntr=0;}
 //		sprintf(number,"%d",cntr);
 //		strcpy(file_name,file);
 //		strcat(file_name,number);

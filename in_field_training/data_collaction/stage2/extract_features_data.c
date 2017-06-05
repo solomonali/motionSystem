@@ -80,9 +80,12 @@ int main()
     	fann_type input[10];
 
 	/* feature extraction variables */ 
-	float mean_zgy[n_S],kurtosis_zgy[n_S],holder[n_S];
+	float mean_zgy[n_S],kurtosis_zgy[n_S],holder[n_S],skewness_zgy[n_S],
+	      mean_xac[n_S],variance_xac[n_S],mean_xac3[n_S],min_xac4[n_S],
+	      mean_xgy[n_S],
+	      ratio_yac[n_S],max_yac[n_S],min_yac[n_S],mean_yac[n_S],
+	      skewness_yac[n_S],variance_yac[n_S],mean_yac3[n_S];
 	//segmentation variables
-	float mean_yac3[n_S],variance_xac1[n_S];
 	int subIndx = 0;
 	int subSeg =4;
 	int nft = 9;
@@ -106,10 +109,10 @@ int main()
 //      rs_nfeatures,rs_nOutputs,rs_result,
 	j_nfeatures=2;j_nOutputs=2;j_result=0;
 //      jl_nfeatures,jl_nOutputs,jl_result,
-        t_nfeatures=2;t_nOutputs=3;t_result=0;
-        sa_nfeatures=2;sa_nOutputs=2;sa_result=0;
+        t_nfeatures=1;t_nOutputs=3;t_result=0;
+        sa_nfeatures=4;sa_nOutputs=2;sa_result=0;
 //      sas_nfeatures,sas_nOutputs,sas_result,
-        sd_nfeatures=2;sd_nOutputs=2;sd_result=0;
+        sd_nfeatures=4;sd_nOutputs=2;sd_result=0;
 //      sds_nfeatures,sds_nOutputs,sds_result;
 
 
@@ -136,16 +139,16 @@ int main()
 	sd_ann = fann_create_from_file("./sd_TEST.net");
 //	sds_ann = fann_create_from_file("../sds_TEST.net");
 
-	float *w_features[]={mean_yac3,variance_xac1};
+	float *w_features[]={mean_yac,variance_xac};
 //	float *ws_features[]={mean_yac3,variance_xac1};
-	float *r_features[]={mean_yac3,variance_xac1};
+	float *r_features[]={mean_yac3,mean_xac3};
 //	float *rs_features[]={mean_yac3,variance_xac1};
-	float *j_features[]={mean_yac3,variance_xac1};
+	float *j_features[]={mean_xac3,min_xac4};
 //	float *jl_features[]={mean_yac3,variance_xac1};
-	float *t_features[]={mean_yac3,variance_xac1};
-	float *sa_features[]={mean_yac3,variance_xac1};
+	float *t_features[]={mean_xgy};
+	float *sa_features[]={ratio_yac,max_yac,skewness_yac,skewness_zgy};
 //	float *sas_features[]={mean_yac3,variance_xac1};
-	float *sd_features[]={mean_yac3,variance_xac1};
+	float *sd_features[]={mean_zgy,skewness_yac,mean_yac,variance_yac};
 //	float *sdsfeatures[]={mean_yac3,variance_xac1};
 	
 	////begin of reading the files/////	
@@ -240,7 +243,17 @@ int main()
 
         	//////extracting features///////////////////
 		/*x_ac*/
-	
+		for(k=0;k<n_S;k++)
+		{
+			if( S_imax[k]>250){ offset = 250;}
+			else{ continue;}
+			start =abs((int)S_imax[k]-offset); //shift to the valley
+			end = (int)S_imax[k]+offset;
+			mean_xac[k] = calculate_mean(x_ac,start,end);
+			calculate_Statistics (x_ac,start,end,mean_xac[k],
+				(holder+k),(variance_xac+k),(holder+k),
+				(holder+k),(holder+k));
+		}	
 		for(k=0;k<n_S;k++)
 		{
 			if( S_imax[k]>250){ offset = 250;}
@@ -262,23 +275,37 @@ int main()
 				start = end;
 		    
 			}
-			variance_xac1[k]= xftrs[k][5][0];         //mean subseg 3 
+			mean_xac3[k]= xftrs[k][0][2];         //mean subseg 3
+		        min_xac4[k] = xftrs[k][2][3];	
 
 		}
-
+		
+		/*x_gy*/
+		for(k=0;k<n_S;k++)
+		{
+			if( S_imax[k]>250){ offset = 250;}
+			else{ continue;}
+			start =abs((int)S_imax[k]-offset); //shift to the valley
+			end = (int)S_imax[k]+offset;
+			mean_xgy[k] = calculate_mean(x_gy,start,end);
+		}	
 		/*y_ac*/
-	/*	for(k=0;k<n_S;k++)
+		for(k=0;k<n_S;k++)
 		{
 			if( S_imax[k]>250){ offset = 250;}
 			else{ continue;}
 			start =abs((int)S_imax[k]-offset); //shift to the valley
 			end = (int)S_imax[k]+offset;
 			mean_yac[k] = calculate_mean(y_ac,start,end);
-			//calculate_Statistics (z_gy,start,end,mean_zgy[k],
-			//	(holder+k),(holder+k),(holder+k),(holder+k),
-			//	(kurtosis_zgy+k));
-	}
-*/	
+			calculate_Max_Min_Range(y_ac,start,end,
+					(max_yac+k),(min_yac+k),
+					(holder+k));
+			calculate_Statistics (y_ac,start,end,mean_yac[k],
+				(holder+k),(variance_yac+k),(holder+k),
+				(skewness_yac+k),(holder+k));
+			ratio_yac[k] = max_yac[k]/min_yac[k];
+		}
+	
 		for(k=0;k<n_S;k++)
 		{
 			if( S_imax[k]>250){ offset = 250;}
@@ -314,8 +341,8 @@ int main()
 			end = (int)S_imax[k]+offset;
 			mean_zgy[k] = calculate_mean(z_gy,start,end);
 			calculate_Statistics (z_gy,start,end,mean_zgy[k],
-				(holder+k),(holder+k),(holder+k),(holder+k),
-				(kurtosis_zgy+k));
+				(holder+k),(holder+k),(holder+k),
+				(skewness_zgy+k),(kurtosis_zgy+k));
 		}
 
 
@@ -463,7 +490,7 @@ int main()
 				default:
 					printf("error motion\n");
 			}	
-/*			switch(sd_result){
+			switch(sd_result){
 				case 0:
 					printf("stair descent\n");
 					break;
@@ -473,7 +500,7 @@ int main()
 				default:
 					printf("error motion\n");
 			}
-*/			printf("\n");	
+			printf("\n");	
 
 		}
 		icntr++;
@@ -685,12 +712,11 @@ int stride_extraction(int ind_thr,int n_P, float *P_i,float *T_i,
 {
 	int a , b , c, n_S;
 	a = 0; b = 1; n_S = 0; c = 0; 
-	while( b < n_P)                     //P
-	{
-		if((P_i[b] - P_i[a]) > ind_thr)   //P
+	while( b < n_P)
+        {	if((P_i[b] - P_i[a]) > ind_thr)
 		{
-			S_imax[n_S] = P_i[a];         //P
-		        S_imin[n_S] = T_i[a];	  // T
+			S_imax[n_S] = P_i[a];
+			S_imin[n_S] = T_i[a];
 			n_S++;
 			a=a+c+1;              
 			b=b+1;

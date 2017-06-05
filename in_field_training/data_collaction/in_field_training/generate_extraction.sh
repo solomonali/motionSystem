@@ -7,7 +7,8 @@
 #else
 #		threshold=100
 #fi
- 
+#if  false 
+#then	
 echo ""
 echo ">>>>COMPILING<<<<"
 make clean
@@ -22,7 +23,6 @@ nLines=$(wc -l < ws_temp.txt)
 nSamples=$((($nLines)/2))
 echo "$nSamples 2 3" > ws_train_set.txt
 cat ws_temp.txt >> ws_train_set.txt
-
 
 ./features_ext_running_speeds file3.csv pt_output.csv strides.csv 80 w1
 ./features_ext_running_speeds file4.csv pt_output.csv strides.csv 80 w2       	
@@ -67,6 +67,7 @@ cat file6.csv >> jumping_data.csv
 
 cat file7.csv > leftTurn_data.csv
 cat file8.csv > rightTurn_data.csv
+
 
 cat file9.csv > stairA_data.csv
 cat file10.csv >> stairA_data.csv
@@ -172,7 +173,7 @@ nLines=$(wc -l < sd_temp.txt)
 nSamples=$((($nLines)/2))
 echo "$nSamples 4 2" > sd_train_set.txt
 cat sd_temp.txt >> sd_train_set.txt
-
+#fi
 ./w_train_neural_net
 ./ws_train_neural_net
 ./r_train_neural_net
