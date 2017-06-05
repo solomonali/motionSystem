@@ -374,6 +374,20 @@ int main()
 	       	       	 	w_result = ii;
         	    	    }
 			}
+			//walking speeds network
+			for(j=0;j<w_nfeatures;j++)
+			{
+		    		input[j]=(float)(ws_features[j][i]/100);
+			}		
+			calc_out = fann_run(ws_ann, input);
+
+			max = -100;
+		        for (ii = 0; ii < ws_nOutputs; ii++) {
+       			    if (calc_out[ii] > max) {
+               			max = calc_out[ii];
+	       	       	 	ws_result = ii;
+        	    	    }
+			}
 			//running network
 			for(j=0;j<r_nfeatures;j++)
 			{
@@ -386,6 +400,20 @@ int main()
        			    if (calc_out[ii] > max) {
                			max = calc_out[ii];
 	       	       	 	r_result = ii;
+        	    	    }
+			}
+			//running speeds network
+			for(j=0;j<rs_nfeatures;j++)
+			{
+		    		input[j]=(float)(rs_features[j][i]/100);
+			}		
+			calc_out = fann_run(rs_ann, input);
+
+			max = -100;
+		        for (ii = 0; ii < rs_nOutputs; ii++) {
+       			    if (calc_out[ii] > max) {
+               			max = calc_out[ii];
+	       	       	 	rs_result = ii;
         	    	    }
 			}
 			//jumping network
@@ -402,6 +430,21 @@ int main()
 	       	       	 	j_result = ii;
         	    	    }
 			}
+			//jumping levels network
+			for(j=0;j<jl_nfeatures;j++)
+			{
+		    		input[j]=(float)(jl_features[j][i]/100);
+			}		
+			calc_out = fann_run(jl_ann, input);
+
+			max = -100;
+		        for (ii = 0; ii < jl_nOutputs; ii++) {
+       			    if (calc_out[ii] > max) {
+               			max = calc_out[ii];
+	       	       	 	jl_result = ii;
+        	    	    }
+			}
+
 			//turning network
 			for(j=0;j<t_nfeatures;j++)
 			{
@@ -430,6 +473,21 @@ int main()
 	       	       	 	sa_result = ii;
         	    	    }
 			}
+			//stair Ascent speeds network
+			for(j=0;j<sas_nfeatures;j++)
+			{
+		    		input[j]=(float)(sas_features[j][i]/100);
+			}		
+			calc_out = fann_run(sas_ann, input);
+
+			max = -100;
+		        for (ii = 0; ii < sas_nOutputs; ii++) {
+       			    if (calc_out[ii] > max) {
+               			max = calc_out[ii];
+	       	       	 	sas_result = ii;
+        	    	    }
+			}
+
 			//stair Descent network
 			for(j=0;j<sd_nfeatures;j++)
 			{
@@ -444,7 +502,21 @@ int main()
 	       	       	 	sd_result = ii;
         	    	    }
 			}
+			//stair Descent speeds network
+			for(j=0;j<sds_nfeatures;j++)
+			{
+		    		input[j]=(float)(sds_features[j][i]/100);
+			}		
+			calc_out = fann_run(sds_ann, input);
 
+			max = -100;
+		        for (ii = 0; ii < sds_nOutputs; ii++) {
+       			    if (calc_out[ii] > max) {
+               			max = calc_out[ii];
+	       	       	 	sds_result = ii;
+        	    	    }
+			}
+			
 			switch(w_result){
 				case 0:
 					printf("walking\n");
@@ -518,16 +590,16 @@ int main()
 	
 	printf("extract_stride_data completed successfuly. Exiting.\n");
    	fann_destroy(w_ann);
-//        fann_destroy(ws_ann);
+        fann_destroy(ws_ann);
   	fann_destroy(r_ann);
-//  	fann_destroy(rs_ann);
+  	fann_destroy(rs_ann);
   	fann_destroy(j_ann);
-//  	fann_destroy(jl_ann);
+  	fann_destroy(jl_ann);
   	fann_destroy(t_ann);
   	fann_destroy(sa_ann);
-//  	fann_destroy(sas_ann);
+  	fann_destroy(sas_ann);
   	fann_destroy(sd_ann);
-//  	fann_destroy(sds_ann);
+  	fann_destroy(sds_ann);
 
 
 /*	free(t); free(t_a); free(t_b); free(x_ac); free(y_ac); free(z_ac);
