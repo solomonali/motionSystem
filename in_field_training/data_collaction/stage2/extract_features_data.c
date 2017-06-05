@@ -648,7 +648,7 @@ int main()
 				}
 			}
 			
-			printf("\n");	
+			//printf("\n");	
 
 		}
 		icntr++;
