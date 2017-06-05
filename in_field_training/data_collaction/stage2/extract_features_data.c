@@ -80,11 +80,11 @@ int main()
     	fann_type input[10];
 
 	/* feature extraction variables */ 
-	float mean_zgy[n_S],kurtosis_zgy[n_S],holder[n_S],skewness_zgy[n_S],
+	float mean_zgy[n_S],kurtosis_zgy[n_S],holder[n_S],skewness_zgy[n_S],max_zgy[n_S],
 	      mean_xac[n_S],variance_xac[n_S],mean_xac3[n_S],min_xac4[n_S],
-	      mean_xgy[n_S],
+	      mean_xgy[n_S],max_xgy[n_S],
 	      ratio_yac[n_S],max_yac[n_S],min_yac[n_S],mean_yac[n_S],
-	      skewness_yac[n_S],variance_yac[n_S],mean_yac3[n_S];
+	      skewness_yac[n_S],variance_yac[n_S],range_yac[n_S],mean_yac3[n_S];
 	//segmentation variables
 	int subIndx = 0;
 	int subSeg =4;
