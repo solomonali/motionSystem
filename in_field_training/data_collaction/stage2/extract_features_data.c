@@ -375,7 +375,7 @@ int main()
         	    	    }
 			}
 			//walking speeds network
-			for(j=0;j<w_nfeatures;j++)
+			for(j=0;j<ws_nfeatures;j++)
 			{
 		    		input[j]=(float)(ws_features[j][i]/100);
 			}		
