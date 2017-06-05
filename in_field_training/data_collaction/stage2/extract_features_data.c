@@ -93,63 +93,63 @@ int main()
 
 	/* motions variables */ 
 	int w_nfeatures,w_nOutputs,w_result,
-//	    ws_nfeatures,ws_nOutputs,ws_result,
+	    ws_nfeatures,ws_nOutputs,ws_result,
 	    r_nfeatures,r_nOutputs,r_result,
-//	    rs_nfeatures,rs_nOutputs,rs_result,
+	    rs_nfeatures,rs_nOutputs,rs_result,
 	    j_nfeatures,j_nOutputs,j_result,
-//	    jl_nfeatures,jl_nOutputs,jl_result,
+	    jl_nfeatures,jl_nOutputs,jl_result,
 	    t_nfeatures,t_nOutputs,t_result,
 	    sa_nfeatures,sa_nOutputs,sa_result,
-//	    sas_nfeatures,sas_nOutputs,sas_result,
+	    sas_nfeatures,sas_nOutputs,sas_result,
 	    sd_nfeatures,sd_nOutputs,sd_result;
-//	    sds_nfeatures,sds_nOutputs,sds_result;
+	    sds_nfeatures,sds_nOutputs,sds_result;
 	w_nfeatures=2;w_nOutputs=2;w_result=0;
-//	ws_nfeatures,ws_nOutputs,ws_result,
+	ws_nfeatures=2,ws_nOutputs=2,ws_result=0,
 	r_nfeatures=2;r_nOutputs=2;r_result=0;
-//      rs_nfeatures,rs_nOutputs,rs_result,
+        rs_nfeatures=2,rs_nOutputs=2,rs_result=0,
 	j_nfeatures=2;j_nOutputs=2;j_result=0;
-//      jl_nfeatures,jl_nOutputs,jl_result,
+        jl_nfeatures=2,jl_nOutputs=2,jl_result=0,
         t_nfeatures=1;t_nOutputs=3;t_result=0;
         sa_nfeatures=4;sa_nOutputs=2;sa_result=0;
-//      sas_nfeatures,sas_nOutputs,sas_result,
+        sas_nfeatures=2,sas_nOutputs=2,sas_result=0,
         sd_nfeatures=4;sd_nOutputs=2;sd_result=0;
-//      sds_nfeatures,sds_nOutputs,sds_result;
+        sds_nfeatures=2,sds_nOutputs=2,sds_result=0;
 
 
     	struct fann *w_ann,
-//		    *ws_ann,
+		    *ws_ann,
 		    *r_ann,
-//		    *rs_ann,
+		    *rs_ann,
 		    *j_ann,
-//		    *jl_ann,
+		    *jl_ann,
 		    *t_ann,
 		    *sa_ann,
-//		    *sas_ann,
+		    *sas_ann,
 		    *sd_ann;
-//		    *sds_ann;
+		    *sds_ann;
     	w_ann = fann_create_from_file("w_TEST.net");
-//	ws_ann = fann_create_from_file("./ws_TEST.net");
+	ws_ann = fann_create_from_file("./ws_TEST.net");
   	r_ann = fann_create_from_file("r_TEST.net");
-//	rs_ann = fann_create_from_file("./rs_TEST.net");
+	rs_ann = fann_create_from_file("./rs_TEST.net");
 	j_ann = fann_create_from_file("j_TEST.net");
-//	jl_ann = fann_create_from_file("./jl_TEST.net");
+	jl_ann = fann_create_from_file("./jl_TEST.net");
 	t_ann = fann_create_from_file("t_TEST.net");
 	sa_ann = fann_create_from_file("sa_TEST.net");
-//	sas_ann = fann_create_from_file("./sas_TEST.net");
+	sas_ann = fann_create_from_file("./sas_TEST.net");
 	sd_ann = fann_create_from_file("./sd_TEST.net");
-//	sds_ann = fann_create_from_file("../sds_TEST.net");
+	sds_ann = fann_create_from_file("../sds_TEST.net");
 
 	float *w_features[]={mean_yac,variance_xac};
-//	float *ws_features[]={mean_yac3,variance_xac1};
+	float *ws_features[]={mean_xac,max_xgy};
 	float *r_features[]={mean_yac3,mean_xac3};
-//	float *rs_features[]={mean_yac3,variance_xac1};
+	float *rs_features[]={mean_xac,max_xgy};
 	float *j_features[]={mean_xac3,min_xac4};
-//	float *jl_features[]={mean_yac3,variance_xac1};
+	float *jl_features[]={max_zgy,max_xgy};
 	float *t_features[]={mean_xgy};
 	float *sa_features[]={ratio_yac,max_yac,skewness_yac,skewness_zgy};
-//	float *sas_features[]={mean_yac3,variance_xac1};
+	float *sas_features[]={range_yac,variance_yac};
 	float *sd_features[]={mean_zgy,skewness_yac,mean_yac,variance_yac};
-//	float *sdsfeatures[]={mean_yac3,variance_xac1};
+	float *sdsfeatures[]={range_yac,variance_yac};
 	
 	////begin of reading the files/////	
 	while(1)
@@ -288,6 +288,9 @@ int main()
 			start =abs((int)S_imax[k]-offset); //shift to the valley
 			end = (int)S_imax[k]+offset;
 			mean_xgy[k] = calculate_mean(x_gy,start,end);
+			calculate_Max_Min_Range(x_gy,start,end,
+					(max_xgy+k),(holder+k),
+					(holder+k));
 		}	
 		/*y_ac*/
 		for(k=0;k<n_S;k++)
@@ -340,6 +343,9 @@ int main()
 			start =abs((int)S_imax[k]-offset); //shift to  valley
 			end = (int)S_imax[k]+offset;
 			mean_zgy[k] = calculate_mean(z_gy,start,end);
+			calculate_Max_Min_Range(z_gy,start,end,
+					(max_zgy+k),(holder+k),
+					(holder+k));
 			calculate_Statistics (z_gy,start,end,mean_zgy[k],
 				(holder+k),(holder+k),(holder+k),
 				(skewness_zgy+k),(kurtosis_zgy+k));
