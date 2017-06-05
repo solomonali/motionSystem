@@ -128,16 +128,16 @@ int main()
 		    *sd_ann,
 		    *sds_ann;
     	w_ann = fann_create_from_file("w_TEST.net");
-	ws_ann = fann_create_from_file("./ws_TEST.net");
+	ws_ann = fann_create_from_file("ws_TEST.net");
   	r_ann = fann_create_from_file("r_TEST.net");
-	rs_ann = fann_create_from_file("./rs_TEST.net");
+	rs_ann = fann_create_from_file("rs_TEST.net");
 	j_ann = fann_create_from_file("j_TEST.net");
-	jl_ann = fann_create_from_file("./jl_TEST.net");
+	jl_ann = fann_create_from_file("jl_TEST.net");
 	t_ann = fann_create_from_file("t_TEST.net");
 	sa_ann = fann_create_from_file("sa_TEST.net");
-	sas_ann = fann_create_from_file("./sas_TEST.net");
-	sd_ann = fann_create_from_file("./sd_TEST.net");
-	sds_ann = fann_create_from_file("../sds_TEST.net");
+	sas_ann = fann_create_from_file("sas_TEST.net");
+	sd_ann = fann_create_from_file("sd_TEST.net");
+	sds_ann = fann_create_from_file("sds_TEST.net");
 
 	float *w_features[]={mean_yac,variance_xac};
 	float *ws_features[]={mean_xac,max_xgy};
