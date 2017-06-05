@@ -266,7 +266,7 @@ int main(int argc, char **argv)
 
 	/*y_ac*/
 	float mean_yac[n_S],max_yac[n_S],min_yac[n_S],variance_yac[n_S],
-	      skewness_yac[n_S],ratio_yac[n_S],
+	      skewness_yac[n_S],ratio_yac[n_S],range_yac[n_S],
 	      mean_yac3[n_S],max_yac4[n_S],range_yac4[n_S],kurtosis_yac2[n_S],
 	      variance_yac4[n_S];
 
@@ -281,7 +281,7 @@ int main(int argc, char **argv)
 		end = (int)S_imax[k]+offset;
 		mean_yac[k] = calculate_mean(y_ac,start,end);
         	calculate_Max_Min_Range(y_ac,start,end,(max_yac+k),(min_yac+k),
-				(holder+k));
+				(range_yac+k));
         	calculate_Statistics (y_ac,start,end,mean_yac[k],(holder+k),
 	          (variance_yac+k),(holder+k),(skewness_yac+k),(holder+k));
 		
@@ -522,7 +522,7 @@ int main(int argc, char **argv)
 
 
 
-	float *features[]={mean_yac3,variance_xac1};
+	float *features[]={range_yac,variance_yac};
 
 	nfeatures = 2;
 	nOutputs = 3;
