@@ -535,10 +535,10 @@ int main(int argc, char **argv)
 
 
 
-	float *features[]={mean_zgy,variance_zgy,skewness_yac,variance_yac};
+	float *features[]={mean_yac,variance_yac,min_yac};
 
 
-	nfeatures = 4;
+	nfeatures = 3;
 	nOutputs = 2;
 	training_file(fp,train_file_name,n_S,S_imax,features,activityCode,t,
 			nfeatures,nOutputs);
