@@ -522,10 +522,10 @@ int main(int argc, char **argv)
 
 
 
-	nfeatures = 2;
+	nfeatures = 3;
 	nOutputs = 2;
 
-	float *features[]={mean_yac3,mean_xac3};
+	float *features[]={mean_yac3,mean_xac3,mean_yac};
 	float meanFeatures[nfeatures];
 	for(k=0;k<nfeatures;k++)
 	{
