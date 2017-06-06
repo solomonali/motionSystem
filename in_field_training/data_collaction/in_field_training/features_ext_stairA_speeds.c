@@ -266,7 +266,7 @@ int main(int argc, char **argv)
 
 	/*y_ac*/
 	float mean_yac[n_S],max_yac[n_S],min_yac[n_S],variance_yac[n_S],
-	      skewness_yac[n_S],ratio_yac[n_S],range_yac[n_S]
+	      skewness_yac[n_S],ratio_yac[n_S],range_yac[n_S],
 	      mean_yac3[n_S],max_yac4[n_S],range_yac4[n_S],kurtosis_yac2[n_S],
 	      variance_yac4[n_S];
 

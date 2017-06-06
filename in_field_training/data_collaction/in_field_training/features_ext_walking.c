@@ -220,6 +220,19 @@ int main(int argc, char **argv)
 	int nOutputs;
 
  	/*x_ac*/
+	float mean_xac[n_S];
+	for(k=0;k<n_S;k++)
+	{
+		//if((k+1)!=n_S){	offset =(S_imax[k+1]-S_imax[k])/2;}
+		if( S_imax[k]>250){ offset = 250;}
+		else { continue;}
+
+		start = abs((int) S_imax[k]-offset); //shift from the pick to the valley
+		end = (int)S_imax[k]+offset;
+		mean_xac[k] = calculate_mean(x_ac,start,end);
+       	}
+
+
 	float mean_xac3[n_S],min_xac4[n_S],range_xac4[n_S],variance_xac1[n_S];
 	int subIndx = 0;
 	int subSeg =4;
@@ -379,7 +392,7 @@ int main(int argc, char **argv)
 
 
 	/*x_gy*/
-	float mean_xgy[n_S],kurtosis_xgy[n_S];
+	float mean_xgy[n_S],kurtosis_xgy[n_S], skewness_xgy[n_S];
 	for(k=0;k<n_S;k++)
 	{
 		//if((k+1)!=n_S){offset = (S_imax[k+1]-S_imax[k])/2;}
@@ -391,7 +404,7 @@ int main(int argc, char **argv)
  	      //calculate_Max_Min_Range(x_gy,start,end,(max_xgy+k),(min_xgy+k),
 		//		(holder+k));
        		calculate_Statistics (x_gy,start,end,mean_xgy[k],(holder+k),
-	         (holder+k),(holder+k),(holder+k),(kurtosis_xgy+k));
+	         (holder+k),(holder+k),(skewness_xgy+k),(kurtosis_xgy+k));
 	}
 
 /////////////seg
@@ -469,7 +482,7 @@ int main(int argc, char **argv)
 
 	/*z_gy*/
 	float mean_zgy[n_S],max_zgy[n_S],min_zgy[n_S],MAD_zgy[n_S],
-	      skewness_zgy[n_S],kurtosis_zgy[n_S];
+	      variance_zgy[n_S],skewness_zgy[n_S],kurtosis_zgy[n_S];
 	
 	for(k=0;k<n_S;k++)
 	{
@@ -482,7 +495,7 @@ int main(int argc, char **argv)
  	      	calculate_Max_Min_Range(z_ac,start,end,(max_zgy+k),(min_zgy+k),
 				(holder+k));
        		calculate_Statistics (z_gy,start,end,mean_zgy[k],(MAD_zgy+k),
-	         (holder+k),(holder+k),(skewness_zgy+k),(kurtosis_zgy+k));
+	         (variance_zgy+k),(holder+k),(skewness_zgy+k),(kurtosis_zgy+k));
 	}
 
 /////////////seg
@@ -522,10 +535,10 @@ int main(int argc, char **argv)
 
 
 
-	float *features[]={mean_yac,variance_yac};
+	float *features[]={mean_zgy,variance_zgy,skewness_yac,variance_yac};
 
 
-	nfeatures = 2;
+	nfeatures = 4;
 	nOutputs = 2;
 	training_file(fp,train_file_name,n_S,S_imax,features,activityCode,t,
 			nfeatures,nOutputs);
@@ -608,7 +621,7 @@ void training_file(FILE *fp,char* train_file_name, int n_S,float *S_imax,
 		
 		for(j=0;j<nfeatures;j++)
 		{
-			fprintf(fp,"%f ",Features[j][i]/100);
+			fprintf(fp,"%f ",Features[j][i]/1000);
 		}	
 		fprintf(fp, "\n");
 		for(k=0;k<nOutputs;k++)

@@ -80,11 +80,12 @@ int main()
     	fann_type input[10];
 
 	/* feature extraction variables */ 
-	float mean_zgy[n_S],kurtosis_zgy[n_S],holder[n_S],skewness_zgy[n_S],
-	      mean_xac[n_S],variance_xac[n_S],mean_xac3[n_S],min_xac4[n_S],
-	      mean_xgy[n_S],
+	float mean_zgy[n_S],kurtosis_zgy[n_S],holder[n_S],variance_zgy[n_S],
+	      skewness_zgy[n_S],max_zgy[n_S],
+	      mean_xac[n_S],min_xac[n_S],variance_xac[n_S],mean_xac3[n_S],min_xac4[n_S],
+	      mean_xgy[n_S],max_xgy[n_S],skewness_xgy[n_S],
 	      ratio_yac[n_S],max_yac[n_S],min_yac[n_S],mean_yac[n_S],
-	      skewness_yac[n_S],variance_yac[n_S],mean_yac3[n_S];
+	      skewness_yac[n_S],variance_yac[n_S],range_yac[n_S],mean_yac3[n_S];
 	//segmentation variables
 	int subIndx = 0;
 	int subSeg =4;
@@ -93,63 +94,63 @@ int main()
 
 	/* motions variables */ 
 	int w_nfeatures,w_nOutputs,w_result,
-//	    ws_nfeatures,ws_nOutputs,ws_result,
+	    ws_nfeatures,ws_nOutputs,ws_result,
 	    r_nfeatures,r_nOutputs,r_result,
-//	    rs_nfeatures,rs_nOutputs,rs_result,
+	    rs_nfeatures,rs_nOutputs,rs_result,
 	    j_nfeatures,j_nOutputs,j_result,
-//	    jl_nfeatures,jl_nOutputs,jl_result,
+	    jl_nfeatures,jl_nOutputs,jl_result,
 	    t_nfeatures,t_nOutputs,t_result,
 	    sa_nfeatures,sa_nOutputs,sa_result,
-//	    sas_nfeatures,sas_nOutputs,sas_result,
-	    sd_nfeatures,sd_nOutputs,sd_result;
-//	    sds_nfeatures,sds_nOutputs,sds_result;
-	w_nfeatures=2;w_nOutputs=2;w_result=0;
-//	ws_nfeatures,ws_nOutputs,ws_result,
+	    sas_nfeatures,sas_nOutputs,sas_result,
+	    sd_nfeatures,sd_nOutputs,sd_result,
+	    sds_nfeatures,sds_nOutputs,sds_result;
+	w_nfeatures=4;w_nOutputs=2;w_result=0;
+	ws_nfeatures=2,ws_nOutputs=3,ws_result=0,
 	r_nfeatures=2;r_nOutputs=2;r_result=0;
-//      rs_nfeatures,rs_nOutputs,rs_result,
+        rs_nfeatures=2,rs_nOutputs=2,rs_result=0,
 	j_nfeatures=2;j_nOutputs=2;j_result=0;
-//      jl_nfeatures,jl_nOutputs,jl_result,
+        jl_nfeatures=2,jl_nOutputs=2,jl_result=0,
         t_nfeatures=1;t_nOutputs=3;t_result=0;
         sa_nfeatures=4;sa_nOutputs=2;sa_result=0;
-//      sas_nfeatures,sas_nOutputs,sas_result,
-        sd_nfeatures=4;sd_nOutputs=2;sd_result=0;
-//      sds_nfeatures,sds_nOutputs,sds_result;
+        sas_nfeatures=2,sas_nOutputs=3,sas_result=0,
+        sd_nfeatures=4;sd_nOutputs=2;sd_result=0,
+        sds_nfeatures=2,sds_nOutputs=3,sds_result=0;
 
 
     	struct fann *w_ann,
-//		    *ws_ann,
+		    *ws_ann,
 		    *r_ann,
-//		    *rs_ann,
+		    *rs_ann,
 		    *j_ann,
-//		    *jl_ann,
+		    *jl_ann,
 		    *t_ann,
 		    *sa_ann,
-//		    *sas_ann,
-		    *sd_ann;
-//		    *sds_ann;
+		    *sas_ann,
+		    *sd_ann,
+		    *sds_ann;
     	w_ann = fann_create_from_file("w_TEST.net");
-//	ws_ann = fann_create_from_file("./ws_TEST.net");
+	ws_ann = fann_create_from_file("ws_TEST.net");
   	r_ann = fann_create_from_file("r_TEST.net");
-//	rs_ann = fann_create_from_file("./rs_TEST.net");
+	rs_ann = fann_create_from_file("rs_TEST.net");
 	j_ann = fann_create_from_file("j_TEST.net");
-//	jl_ann = fann_create_from_file("./jl_TEST.net");
+	jl_ann = fann_create_from_file("jl_TEST.net");
 	t_ann = fann_create_from_file("t_TEST.net");
 	sa_ann = fann_create_from_file("sa_TEST.net");
-//	sas_ann = fann_create_from_file("./sas_TEST.net");
-	sd_ann = fann_create_from_file("./sd_TEST.net");
-//	sds_ann = fann_create_from_file("../sds_TEST.net");
+	sas_ann = fann_create_from_file("sas_TEST.net");
+	sd_ann = fann_create_from_file("sd_TEST.net");
+	sds_ann = fann_create_from_file("sds_TEST.net");
 
-	float *w_features[]={mean_yac,variance_xac};
-//	float *ws_features[]={mean_yac3,variance_xac1};
+	float *w_features[]={mean_zgy,variance_zgy,skewness_yac,variance_yac};
+	float *ws_features[]={mean_xac,max_xgy};
 	float *r_features[]={mean_yac3,mean_xac3};
-//	float *rs_features[]={mean_yac3,variance_xac1};
+	float *rs_features[]={min_xac,max_xgy};
 	float *j_features[]={mean_xac3,min_xac4};
-//	float *jl_features[]={mean_yac3,variance_xac1};
+	float *jl_features[]={max_zgy,max_xgy};
 	float *t_features[]={mean_xgy};
 	float *sa_features[]={ratio_yac,max_yac,skewness_yac,skewness_zgy};
-//	float *sas_features[]={mean_yac3,variance_xac1};
+	float *sas_features[]={range_yac,variance_yac};
 	float *sd_features[]={mean_zgy,skewness_yac,mean_yac,variance_yac};
-//	float *sdsfeatures[]={mean_yac3,variance_xac1};
+	float *sds_features[]={range_yac,variance_yac};
 	
 	////begin of reading the files/////	
 	while(1)
@@ -250,6 +251,9 @@ int main()
 			start =abs((int)S_imax[k]-offset); //shift to the valley
 			end = (int)S_imax[k]+offset;
 			mean_xac[k] = calculate_mean(x_ac,start,end);
+			calculate_Max_Min_Range(x_ac,start,end,
+					(holder+k),(min_xac+k),
+					(holder+k));
 			calculate_Statistics (x_ac,start,end,mean_xac[k],
 				(holder+k),(variance_xac+k),(holder+k),
 				(holder+k),(holder+k));
@@ -288,6 +292,13 @@ int main()
 			start =abs((int)S_imax[k]-offset); //shift to the valley
 			end = (int)S_imax[k]+offset;
 			mean_xgy[k] = calculate_mean(x_gy,start,end);
+			calculate_Max_Min_Range(x_gy,start,end,
+					(max_xgy+k),(holder+k),
+					(holder+k));
+			calculate_Statistics (x_gy,start,end,mean_xgy[k],
+				(holder+k),(holder+k),(holder+k),
+				(skewness_xgy+k),(holder+k));
+
 		}	
 		/*y_ac*/
 		for(k=0;k<n_S;k++)
@@ -340,8 +351,11 @@ int main()
 			start =abs((int)S_imax[k]-offset); //shift to  valley
 			end = (int)S_imax[k]+offset;
 			mean_zgy[k] = calculate_mean(z_gy,start,end);
+			calculate_Max_Min_Range(z_gy,start,end,
+					(max_zgy+k),(holder+k),
+					(holder+k));
 			calculate_Statistics (z_gy,start,end,mean_zgy[k],
-				(holder+k),(holder+k),(holder+k),
+				(holder+k),(variance_zgy+k),(holder+k),
 				(skewness_zgy+k),(kurtosis_zgy+k));
 		}
 
@@ -354,7 +368,7 @@ int main()
 			//walking network
 			for(j=0;j<w_nfeatures;j++)
 			{
-		    		input[j]=(float)(w_features[j][i]/100);
+		    		input[j]=(float)(w_features[j][i]/1000);
 			}		
 			calc_out = fann_run(w_ann, input);
 
@@ -363,6 +377,20 @@ int main()
        			    if (calc_out[ii] > max) {
                			max = calc_out[ii];
 	       	       	 	w_result = ii;
+        	    	    }
+			}
+			//walking speeds network
+			for(j=0;j<ws_nfeatures;j++)
+			{
+		    		input[j]=(float)(ws_features[j][i]/100);
+			}		
+			calc_out = fann_run(ws_ann, input);
+
+			max = -100;
+		        for (ii = 0; ii < ws_nOutputs; ii++) {
+       			    if (calc_out[ii] > max) {
+               			max = calc_out[ii];
+	       	       	 	ws_result = ii;
         	    	    }
 			}
 			//running network
@@ -379,6 +407,20 @@ int main()
 	       	       	 	r_result = ii;
         	    	    }
 			}
+			//running speeds network
+			for(j=0;j<rs_nfeatures;j++)
+			{
+		    		input[j]=(float)(rs_features[j][i]/100);
+			}		
+			calc_out = fann_run(rs_ann, input);
+
+			max = -100;
+		        for (ii = 0; ii < rs_nOutputs; ii++) {
+       			    if (calc_out[ii] > max) {
+               			max = calc_out[ii];
+	       	       	 	rs_result = ii;
+        	    	    }
+			}
 			//jumping network
 			for(j=0;j<j_nfeatures;j++)
 			{
@@ -393,6 +435,21 @@ int main()
 	       	       	 	j_result = ii;
         	    	    }
 			}
+			//jumping levels network
+			for(j=0;j<jl_nfeatures;j++)
+			{
+		    		input[j]=(float)(jl_features[j][i]/100);
+			}		
+			calc_out = fann_run(jl_ann, input);
+
+			max = -100;
+		        for (ii = 0; ii < jl_nOutputs; ii++) {
+       			    if (calc_out[ii] > max) {
+               			max = calc_out[ii];
+	       	       	 	jl_result = ii;
+        	    	    }
+			}
+
 			//turning network
 			for(j=0;j<t_nfeatures;j++)
 			{
@@ -421,6 +478,21 @@ int main()
 	       	       	 	sa_result = ii;
         	    	    }
 			}
+			//stair Ascent speeds network
+			for(j=0;j<sas_nfeatures;j++)
+			{
+		    		input[j]=(float)(sas_features[j][i]/100);
+			}		
+			calc_out = fann_run(sas_ann, input);
+
+			max = -100;
+		        for (ii = 0; ii < sas_nOutputs; ii++) {
+       			    if (calc_out[ii] > max) {
+               			max = calc_out[ii];
+	       	       	 	sas_result = ii;
+        	    	    }
+			}
+
 			//stair Descent network
 			for(j=0;j<sd_nfeatures;j++)
 			{
@@ -435,8 +507,22 @@ int main()
 	       	       	 	sd_result = ii;
         	    	    }
 			}
+			//stair Descent speeds network
+			for(j=0;j<sds_nfeatures;j++)
+			{
+		    		input[j]=(float)(sds_features[j][i]/100);
+			}		
+			calc_out = fann_run(sds_ann, input);
 
-			switch(w_result){
+			max = -100;
+		        for (ii = 0; ii < sds_nOutputs; ii++) {
+       			    if (calc_out[ii] > max) {
+               			max = calc_out[ii];
+	       	       	 	sds_result = ii;
+        	    	    }
+			}
+			
+/*			switch(w_result){
 				case 0:
 					printf("walking\n");
 					break;
@@ -500,7 +586,76 @@ int main()
 				default:
 					printf("error motion\n");
 			}
-			printf("\n");	
+*/		
+			if(t_result==0){
+				printf("left turn\n");
+			}
+			else if(t_result==1){
+				printf("right turn\n");
+			}
+			else if(r_result==0){
+				switch(rs_result){
+				case 0:
+					printf("running\n");
+					break;
+				case 1:
+					printf("running\n");
+					break;
+				}
+			}
+			else if(j_result==0){
+				switch(jl_result){
+					case 0:
+						printf("jumping\n");
+						break;
+					case 1:
+						printf("jumping\n");
+						break;
+				}
+			
+			}
+			else if(w_result==0){
+				switch(ws_result){
+					case 0:
+						printf("walking\n");
+						break;
+					case 1:
+						printf("walking\n");
+						break;
+					case 2:
+						printf("walking\n");
+						break;
+				}
+			}
+
+		
+			else if(sa_result==0){
+				switch(sas_result){
+					case 0:
+						printf("stair ascent\n");
+						break;
+					case 1:
+						printf("stair ascent\n");
+						break;
+					case 2:
+						printf("stair ascent\n");
+						break;
+				}
+			}
+			else if(sd_result==0){
+				switch(sds_result){
+					case 0:
+						printf("stair descent\n");
+						break;
+					case 1:
+						printf("stair descent\n");
+						break;
+					case 2:
+						printf("stair descent\n");
+						break;
+				}
+			}
+//			printf("\n");	
 
 		}
 		icntr++;
@@ -509,16 +664,16 @@ int main()
 	
 	printf("extract_stride_data completed successfuly. Exiting.\n");
    	fann_destroy(w_ann);
-//        fann_destroy(ws_ann);
+        fann_destroy(ws_ann);
   	fann_destroy(r_ann);
-//  	fann_destroy(rs_ann);
+  	fann_destroy(rs_ann);
   	fann_destroy(j_ann);
-//  	fann_destroy(jl_ann);
+  	fann_destroy(jl_ann);
   	fann_destroy(t_ann);
   	fann_destroy(sa_ann);
-//  	fann_destroy(sas_ann);
+  	fann_destroy(sas_ann);
   	fann_destroy(sd_ann);
-//  	fann_destroy(sds_ann);
+  	fann_destroy(sds_ann);
 
 
 /*	free(t); free(t_a); free(t_b); free(x_ac); free(y_ac); free(z_ac);
@@ -712,7 +867,12 @@ int stride_extraction(int ind_thr,int n_P, float *P_i,float *T_i,
 {
 	int a , b , c, n_S;
 	a = 0; b = 1; n_S = 0; c = 0; 
-	while( b < n_P)                     //P
+	while( b < n_P)
+        {	if((P_i[b] - P_i[a]) > ind_thr)
+		{
+			S_imax[n_S] = P_i[a];
+			S_imin[n_S] = T_i[a];
+			n_S++;
 			a=a+c+1;              
 			b=b+1;
 			c=0;

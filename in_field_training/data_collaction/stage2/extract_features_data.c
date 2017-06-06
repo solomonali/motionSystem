@@ -80,9 +80,10 @@ int main()
     	fann_type input[10];
 
 	/* feature extraction variables */ 
-	float mean_zgy[n_S],kurtosis_zgy[n_S],holder[n_S],skewness_zgy[n_S],max_zgy[n_S],
+	float mean_zgy[n_S],kurtosis_zgy[n_S],holder[n_S],variance_zgy[n_S],
+	      skewness_zgy[n_S],max_zgy[n_S],
 	      mean_xac[n_S],min_xac[n_S],variance_xac[n_S],mean_xac3[n_S],min_xac4[n_S],
-	      mean_xgy[n_S],max_xgy[n_S],
+	      mean_xgy[n_S],max_xgy[n_S],skewness_xgy[n_S],
 	      ratio_yac[n_S],max_yac[n_S],min_yac[n_S],mean_yac[n_S],
 	      skewness_yac[n_S],variance_yac[n_S],range_yac[n_S],mean_yac3[n_S];
 	//segmentation variables
@@ -103,17 +104,17 @@ int main()
 	    sas_nfeatures,sas_nOutputs,sas_result,
 	    sd_nfeatures,sd_nOutputs,sd_result,
 	    sds_nfeatures,sds_nOutputs,sds_result;
-	w_nfeatures=2;w_nOutputs=2;w_result=0;
-	ws_nfeatures=2,ws_nOutputs=2,ws_result=0,
+	w_nfeatures=4;w_nOutputs=2;w_result=0;
+	ws_nfeatures=2,ws_nOutputs=3,ws_result=0,
 	r_nfeatures=2;r_nOutputs=2;r_result=0;
         rs_nfeatures=2,rs_nOutputs=2,rs_result=0,
 	j_nfeatures=2;j_nOutputs=2;j_result=0;
         jl_nfeatures=2,jl_nOutputs=2,jl_result=0,
         t_nfeatures=1;t_nOutputs=3;t_result=0;
         sa_nfeatures=4;sa_nOutputs=2;sa_result=0;
-        sas_nfeatures=2,sas_nOutputs=2,sas_result=0,
+        sas_nfeatures=2,sas_nOutputs=3,sas_result=0,
         sd_nfeatures=4;sd_nOutputs=2;sd_result=0,
-        sds_nfeatures=2,sds_nOutputs=2,sds_result=0;
+        sds_nfeatures=2,sds_nOutputs=3,sds_result=0;
 
 
     	struct fann *w_ann,
@@ -139,7 +140,7 @@ int main()
 	sd_ann = fann_create_from_file("sd_TEST.net");
 	sds_ann = fann_create_from_file("sds_TEST.net");
 
-	float *w_features[]={mean_yac,variance_xac};
+	float *w_features[]={mean_zgy,variance_zgy,skewness_yac,variance_yac};
 	float *ws_features[]={mean_xac,max_xgy};
 	float *r_features[]={mean_yac3,mean_xac3};
 	float *rs_features[]={min_xac,max_xgy};
@@ -294,6 +295,10 @@ int main()
 			calculate_Max_Min_Range(x_gy,start,end,
 					(max_xgy+k),(holder+k),
 					(holder+k));
+			calculate_Statistics (x_gy,start,end,mean_xgy[k],
+				(holder+k),(holder+k),(holder+k),
+				(skewness_xgy+k),(holder+k));
+
 		}	
 		/*y_ac*/
 		for(k=0;k<n_S;k++)
@@ -350,7 +355,7 @@ int main()
 					(max_zgy+k),(holder+k),
 					(holder+k));
 			calculate_Statistics (z_gy,start,end,mean_zgy[k],
-				(holder+k),(holder+k),(holder+k),
+				(holder+k),(variance_zgy+k),(holder+k),
 				(skewness_zgy+k),(kurtosis_zgy+k));
 		}
 
@@ -363,7 +368,7 @@ int main()
 			//walking network
 			for(j=0;j<w_nfeatures;j++)
 			{
-		    		input[j]=(float)(w_features[j][i]/100);
+		    		input[j]=(float)(w_features[j][i]/1000);
 			}		
 			calc_out = fann_run(w_ann, input);
 
@@ -581,7 +586,7 @@ int main()
 				default:
 					printf("error motion\n");
 			}
-*/			
+*/		
 			if(t_result==0){
 				printf("left turn\n");
 			}
@@ -607,32 +612,7 @@ int main()
 						printf("jumping: level 2\n");
 						break;
 				}
-			}
-			else if(sa_result==0){
-				switch(sas_result){
-					case 0:
-						printf("stair ascent: speed 1\n");
-						break;
-					case 1:
-						printf("stair ascent: speed 2\n");
-						break;
-					case 2:
-						printf("stair ascent: speed 3\n");
-						break;
-				}
-			}
-			else if(sd_result==0){
-				switch(sds_result){
-					case 0:
-						printf("stair descent: speed 1\n");
-						break;
-					case 1:
-						printf("stair descent: speed 2\n");
-						break;
-					case 2:
-						printf("stair descent: speed 3\n");
-						break;
-				}
+			
 			}
 			else if(w_result==0){
 				switch(ws_result){
@@ -647,8 +627,35 @@ int main()
 						break;
 				}
 			}
-			
-			//printf("\n");	
+
+			else if(sd_result==0){
+				switch(sds_result){
+					case 0:
+						printf("stair descent: speed 1\n");
+						break;
+					case 1:
+						printf("stair descent: speed 2\n");
+						break;
+					case 2:
+						printf("stair descent: speed 3\n");
+						break;
+				}
+			}
+			else if(sa_result==0){
+				switch(sas_result){
+					case 0:
+						printf("stair ascent: speed 1\n");
+						break;
+					case 1:
+						printf("stair ascent: speed 2\n");
+						break;
+					case 2:
+						printf("stair ascent: speed 3\n");
+						break;
+				}
+			}
+
+//			printf("\n");	
 
 		}
 		icntr++;

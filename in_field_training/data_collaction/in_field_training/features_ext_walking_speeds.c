@@ -379,7 +379,7 @@ int main(int argc, char **argv)
 
 
 	/*x_gy*/
-	float mean_xgy[n_S],kurtosis_xgy[n_S];
+	float mean_xgy[n_S],kurtosis_xgy[n_S],max_xgy[n_S],min_xgy[n_S];
 	for(k=0;k<n_S;k++)
 	{
 		//if((k+1)!=n_S){offset = (S_imax[k+1]-S_imax[k])/2;}
@@ -388,8 +388,8 @@ int main(int argc, char **argv)
 		start = abs((int)S_imax[k]-offset); //shift from the pick to the valley
 		end = (int)S_imax[k]+offset;
 		mean_xgy[k] = calculate_mean(x_gy,start,end);
- 	      //calculate_Max_Min_Range(x_gy,start,end,(max_xgy+k),(min_xgy+k),
-		//		(holder+k));
+ 	        calculate_Max_Min_Range(x_gy,start,end,(max_xgy+k),(min_xgy+k),
+				(holder+k));
        		calculate_Statistics (x_gy,start,end,mean_xgy[k],(holder+k),
 	         (holder+k),(holder+k),(holder+k),(kurtosis_xgy+k));
 	}
@@ -522,7 +522,7 @@ int main(int argc, char **argv)
 
 
 
-	float *features[]={mean_yac3,variance_xac1};
+	float *features[]={mean_yac3,max_xgy};
 
 
 	nfeatures = 2;

@@ -107,7 +107,7 @@ int main() {
 		//Read the sensor data and print them.
 		gettimeofday(&tv_start,NULL);
 		startTime = tv_start.tv_sec;
-		while (((tv_after.tv_sec)-startTime)<6){
+		while (((tv_after.tv_sec)-startTime)<12){
 			if(!run_flag){break;}
 			gettimeofday(&tv_before, NULL);
 			accel_data = read_accel(accel, a_res);
