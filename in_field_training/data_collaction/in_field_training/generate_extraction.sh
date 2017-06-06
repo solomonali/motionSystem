@@ -142,7 +142,7 @@ cat t_temp.txt >> t_train_set.txt
 
 nLines=$(wc -l < w_temp.txt)
 nSamples=$((($nLines)/2))
-echo "$nSamples 4 2" > w_train_set.txt
+echo "$nSamples 3 2" > w_train_set.txt
 cat w_temp.txt >> w_train_set.txt
 
 
@@ -150,14 +150,14 @@ cat w_temp.txt >> w_train_set.txt
 ./features_ext_running others_running.csv pt_output.csv strides.csv 80 w2
 nLines=$(wc -l < r_temp.txt)
 nSamples=$((($nLines)/2))
-echo "$nSamples 2 2" > r_train_set.txt
+echo "$nSamples 3 2" > r_train_set.txt
 cat r_temp.txt >> r_train_set.txt
 
 ./features_ext_jumping jumping_data.csv pt_output.csv strides.csv 80 w1
 ./features_ext_jumping others_jumping.csv pt_output.csv strides.csv 80 w2      
 nLines=$(wc -l < j_temp.txt)
 nSamples=$((($nLines)/2))
-echo "$nSamples 2 2" > j_train_set.txt
+echo "$nSamples 4 2" > j_train_set.txt
 cat j_temp.txt >> j_train_set.txt
 
 ./features_ext_stairA stairA_data.csv pt_output.csv strides.csv 80 w1
