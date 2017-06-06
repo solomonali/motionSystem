@@ -522,10 +522,10 @@ int main(int argc, char **argv)
 
 
 
-	float *features[]={mean_xac3,min_xac4,kurtosis_xgy,kurtosis_zgy};
+	float *features[]={mean_xac3,min_xac4};
 
 
-	nfeatures = 4;
+	nfeatures = 2;
 	nOutputs = 2;
 	training_file(fp,train_file_name,n_S,S_imax,features,activityCode,t,
 			nfeatures,nOutputs);
