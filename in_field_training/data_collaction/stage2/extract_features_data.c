@@ -83,7 +83,7 @@ int main()
 	float mean_zgy[n_S],kurtosis_zgy[n_S],holder[n_S],variance_zgy[n_S],
 	      skewness_zgy[n_S],max_zgy[n_S],
 	      mean_xac[n_S],min_xac[n_S],variance_xac[n_S],mean_xac3[n_S],min_xac4[n_S],
-	      mean_xgy[n_S],max_xgy[n_S],skewness_xgy[n_S],
+	      mean_xgy[n_S],max_xgy[n_S],skewness_xgy[n_S],kurtosis_xgy[n_S],
 	      ratio_yac[n_S],max_yac[n_S],min_yac[n_S],mean_yac[n_S],
 	      skewness_yac[n_S],variance_yac[n_S],range_yac[n_S],mean_yac3[n_S];
 	//segmentation variables
@@ -104,11 +104,11 @@ int main()
 	    sas_nfeatures,sas_nOutputs,sas_result,
 	    sd_nfeatures,sd_nOutputs,sd_result,
 	    sds_nfeatures,sds_nOutputs,sds_result;
-	w_nfeatures=4;w_nOutputs=2;w_result=0;
+	w_nfeatures=3;w_nOutputs=2;w_result=0;
 	ws_nfeatures=2,ws_nOutputs=3,ws_result=0,
-	r_nfeatures=2;r_nOutputs=2;r_result=0;
+	r_nfeatures=3;r_nOutputs=2;r_result=0;
         rs_nfeatures=2,rs_nOutputs=2,rs_result=0,
-	j_nfeatures=2;j_nOutputs=2;j_result=0;
+	j_nfeatures=4;j_nOutputs=2;j_result=0;
         jl_nfeatures=2,jl_nOutputs=2,jl_result=0,
         t_nfeatures=1;t_nOutputs=3;t_result=0;
         sa_nfeatures=4;sa_nOutputs=2;sa_result=0;
@@ -140,11 +140,11 @@ int main()
 	sd_ann = fann_create_from_file("sd_TEST.net");
 	sds_ann = fann_create_from_file("sds_TEST.net");
 
-	float *w_features[]={mean_zgy,variance_zgy,skewness_yac,variance_yac};
+	float *w_features[]={mean_yac,variance_yac,min_yac};
 	float *ws_features[]={mean_xac,max_xgy};
-	float *r_features[]={mean_yac3,mean_xac3};
+	float *r_features[]={mean_yac3,mean_xac3,mean_yac};
 	float *rs_features[]={min_xac,max_xgy};
-	float *j_features[]={mean_xac3,min_xac4};
+	float *j_features[]={mean_xac3,min_xac4,kurtosis_xgy,kurtosis_zgy};
 	float *jl_features[]={max_zgy,max_xgy};
 	float *t_features[]={mean_xgy};
 	float *sa_features[]={ratio_yac,max_yac,skewness_yac,skewness_zgy};
@@ -297,7 +297,7 @@ int main()
 					(holder+k));
 			calculate_Statistics (x_gy,start,end,mean_xgy[k],
 				(holder+k),(holder+k),(holder+k),
-				(skewness_xgy+k),(holder+k));
+				(skewness_xgy+k),(kurtosis_xgy+k));
 
 		}	
 		/*y_ac*/
